@@ -3,7 +3,7 @@ const faker = require('faker')
 const boom = require('boom')
 
 // Import internal dependancies
-const fastify = require('../server.js')
+const fastify = require('../server.ts')
 
 // Fake data
 const cars = [
@@ -36,6 +36,28 @@ const Owner = require('../models/Owner')
 const Service = require('../models/Service')
 
 // Fake data generation functions
+const generateProductData = () => {
+    let ownerData = []
+    let i = 0
+
+    while (i < 50) {
+        const name = faker.fake('{{name.firstName}}')
+        const image = faker.fake('{{name.lastName}}')
+        const unit = faker.fake(`${name.toLowerCase()}.${image.toLowerCase()}@gmail.com`)
+
+        const owner = {
+            name,
+            image,
+            unit
+        }
+
+        ownerData.push(owner)
+        i++
+    }
+
+    return ownerData
+}
+
 const generateOwnerData = () => {
     let ownerData = []
     let i = 0
@@ -109,6 +131,7 @@ const generateServiceData = carsIds => {
 fastify.ready().then(
     async () => {
         try {
+            fastify.db.product.save(generateProductData())
             const owners = await Owner.insertMany(generateOwnerData())
             const ownersIds = owners.map(x => x._id)
 
