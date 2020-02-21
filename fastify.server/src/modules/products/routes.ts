@@ -1,4 +1,5 @@
 import { listProductsSchema, deleteProductSchema, postProductSchema } from "./schema"
+// import product from './entity';
 
 export default (server, options, next) => {
     server.get(
@@ -12,7 +13,8 @@ export default (server, options, next) => {
             console.log(server.db)
             console.log("----")
 
-            const products = await server.db.products.find()
+            // const products = await server.db.products.find()
+            const products = await server.db.products.findOne(1)
             res.send(products)
         }
     )
@@ -20,7 +22,7 @@ export default (server, options, next) => {
         "/product",
         { schema: postProductSchema, preValidation: [server.authenticate] },
         async (req, res) => {
-            const { name, id, image, unit } = req.body
+            const { name, id, image, expires_in, unit } = req.body
             if (!id) {
                 return res.code(404).send("product not found")
             }
@@ -30,9 +32,23 @@ export default (server, options, next) => {
             // if (!product) {
             //   return res.code(404).send("product not found")
             // }
+            req.log.info(server)
 
             req.log.info(`save inventory to db`)
-            const product = await server.db.product.save({ name, id, image, unit })
+            // const product = await server.db.product.save({ name, id, image, unit })
+            // const product = await server.orm
+            //     // .getRepository(require('./entity'))
+            //     .createQueryBuilder()
+            //     .insert()
+            //     .into(require('./entity'))
+            //     .values([
+            //         { name, id, image, unit }
+            //     ])
+            //     .execute();
+
+            const product = await server.db.products.save({ name, id, image, expires_in, unit })
+
+            //   return users;
 
             res.code(201).send(product)
         }

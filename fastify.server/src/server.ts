@@ -1,10 +1,10 @@
-import productsHandler from "./modules/products/routes"
 // Require the fastify framework and instantiate it
 import fastify from "fastify"
 import db from "./plugins/db"
 import gql from 'fastify-gql'
 import schema from './schema'
 import auth from "./plugins/auth"
+import productsHandler from "./modules/products/routes"
 // Require external modules
 // const mongoose = require('mongoose')
 
@@ -30,7 +30,7 @@ function createServer() {
                 version: "0.1.0"
             },
             servers: [
-                { url: "http://localhost:3000", description: "development" },
+                { url: "http://127.0.0.1:3000", description: "development" },
                 {
                     url: "https://<production-url>",
                     description: "production"
@@ -51,6 +51,14 @@ function createServer() {
     })
 
     server.register(auth)
+    // server.register(require('fastify-typeorm'), {
+    //     type: "mssql",
+    //     host: "localhost",
+    //     port: 1433,
+    //     username: "sa",
+    //     password: "hoangtrum",
+    //     database: "fastify",
+    // });
     server.register(db)
     // server.register(healthHandler)
     server.register(productsHandler)
@@ -64,6 +72,8 @@ function createServer() {
         req.log.error(error.toString())
         res.send({ error })
     })
+
+
 
 
     // generate temporary token to be used in app
