@@ -12,6 +12,8 @@
   "license": "ISC",
   "dependencies": {
     "@types/node": "^13.7.2",
+    "apollo-server": "^2.10.1",
+    "apollo-server-fastify": "^2.10.1",
     "boom": "^7.3.0",
     "dotenv": "^8.2.0",
     "faker": "^4.1.0",
@@ -30,8 +32,9 @@
     "pino-pretty": "^3.6.0",
     "reflect-metadata": "^0.1.13",
     "ts-node": "^8.6.2",
+    "type-graphql": "^0.17.6",
     "typeorm": "^0.2.22",
-    "typescript": "^3.7.5"
+    "typescript": "^3.8.2"
   },
   "devDependencies": {
     "ts-node-dev": "^1.0.0-pre.44"

@@ -1,6 +1,5 @@
 import { listProductsSchema, deleteProductSchema, postProductSchema } from "./schema"
 // import product from './entity';
-
 export default (server, options, next) => {
     server.get(
         "/products",

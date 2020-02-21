@@ -1,10 +1,14 @@
 // Require the fastify framework and instantiate it
 import fastify from "fastify"
+import "reflect-metadata";
 import db from "./plugins/db"
-import gql from 'fastify-gql'
-import schema from './schema'
+// import gql from 'fastify-gql'
+// import schema from './schema'
 import auth from "./plugins/auth"
 import productsHandler from "./modules/products/routes"
+import { buildSchema } from "type-graphql";
+const { ApolloServer, gql } = require('apollo-server-fastify');
+import { ProductResolver } from "./modules/products/resolver";
 // Require external modules
 // const mongoose = require('mongoose')
 
@@ -60,13 +64,23 @@ function createServer() {
     //     database: "fastify",
     // });
     server.register(db)
+
+
     // server.register(healthHandler)
     server.register(productsHandler)
     // server.register(inventoryHandler)
-    server.register(gql, {
-        schema,
-        graphiql: true
+    const schema = buildSchema({
+        resolvers: [ProductResolver] // add this
     })
+
+    const gserver = new ApolloServer({
+        schema
+    });
+    server.register(gserver.createHandler())
+    // server.register(gql, {
+    //     schema,
+    //     graphiql: true
+    // })
 
     server.setErrorHandler((error, req, res) => {
         req.log.error(error.toString())
